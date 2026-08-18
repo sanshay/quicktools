@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f8f8ff" />
+  <meta name="description" content="QuickTools — fast, clean calculators, measurement converters, engineering tools, finance helpers, text utilities, and developer tools." />
+  <title>QuickTools — Useful tools, instantly.</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="QuickTools home">
+      <span class="brand-mark" aria-hidden="true">Q</span>
+      <span>QuickTools</span>
+    </a>
+    <nav class="header-actions" aria-label="Primary navigation">
+      <button class="ghost-button" id="themeToggle" type="button" aria-label="Toggle color theme">
+        <span id="themeIcon">◐</span>
+      </button>
+      <a class="ghost-button text-button" href="#all-tools">All tools</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Simple. Fast. Free.</div>
+      <h1>Useful tools,<br><span>instantly.</span></h1>
+      <p>Calculators, conversions, measurements, engineering, finance, date tools, text utilities and developer helpers — without clutter.</p>
+
+      <div class="search-shell" role="search">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="toolSearch" type="search" placeholder="Search tools…" autocomplete="off" aria-label="Search tools" />
+        <kbd>/</kbd>
+      </div>
+
+      <div class="quick-links" id="quickLinks" aria-label="Popular tools"></div>
+    </section>
+
+    <!-- Reserved for a future responsive ad unit. Keep disabled until AdSense is configured. -->
+    <section class="ad-slot" hidden aria-label="Advertisement">
+      <span>Advertisement</span>
+    </section>
+
+    <section class="tools-section" id="all-tools">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Toolbox</p>
+          <h2><span id="sectionToolCount">85</span> useful tools, one clean interface.</h2>
+        </div>
+        <div class="category-tabs" id="categoryTabs" role="tablist" aria-label="Tool categories"></div>
+      </div>
+
+      <div class="tools-grid" id="toolsGrid"></div>
+      <div class="empty-state" id="emptyState" hidden>
+        <div class="empty-icon">⌕</div>
+        <h3>No matching tools</h3>
+        <p>Try a shorter search or browse another category.</p>
+      </div>
+    </section>
+
+    <section class="trust-strip">
+      <div><strong id="toolCount">0</strong><span>useful tools</span></div>
+      <div><strong>0</strong><span>sign-ups required</span></div>
+      <div><strong>100%</strong><span>browser-based</span></div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#"><span class="brand-mark">Q</span><span>QuickTools</span></a>
+    <p>Small tools for everyday problems.</p>
+    <div class="footer-links">
+      <a href="#all-tools">Tools</a>
+      <a href="mailto:hello@quicktools.local">Feedback</a>
+      <span>© <span id="year"></span></span>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="tool-modal" id="toolModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div>
+          <div class="modal-category" id="modalCategory"></div>
+          <h2 id="modalTitle"></h2>
+        </div>
+        <button class="close-button" id="closeModal" type="button" aria-label="Close tool">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </section>
+  </div>
+
+  <template id="fieldTemplate">
+    <label class="field">
+      <span class="field-label"></span>
+      <div class="input-wrap">
+        <input />
+        <span class="suffix"></span>
+      </div>
+    </label>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
