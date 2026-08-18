@@ -11,7 +11,7 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="#" aria-label="QuickTools home">
+    <a class="brand" href="./" aria-label="QuickTools home">
       <span class="brand-mark" aria-hidden="true">Q</span>
       <span>QuickTools</span>
     </a>
@@ -38,8 +38,7 @@
       <div class="quick-links" id="quickLinks" aria-label="Popular tools"></div>
     </section>
 
-    <!-- Reserved for a future responsive ad unit. Keep disabled until AdSense is configured. -->
-    <section class="ad-slot" hidden aria-label="Advertisement">
+    <section class="ad-slot" data-ad-key="homeTop" aria-label="Advertisement">
       <span>Advertisement</span>
     </section>
 
@@ -60,6 +59,10 @@
       </div>
     </section>
 
+    <section class="ad-slot ad-slot-wide" data-ad-key="homeBottom" aria-label="Advertisement">
+      <span>Advertisement</span>
+    </section>
+
     <section class="trust-strip">
       <div><strong id="toolCount">0</strong><span>useful tools</span></div>
       <div><strong>0</strong><span>sign-ups required</span></div>
@@ -68,11 +71,14 @@
   </main>
 
   <footer>
-    <a class="brand footer-brand" href="#"><span class="brand-mark">Q</span><span>QuickTools</span></a>
+    <a class="brand footer-brand" href="./"><span class="brand-mark">Q</span><span>QuickTools</span></a>
     <p>Small tools for everyday problems.</p>
     <div class="footer-links">
       <a href="#all-tools">Tools</a>
-      <a href="mailto:hello@quicktools.local">Feedback</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
       <span>© <span id="year"></span></span>
     </div>
   </footer>
@@ -100,6 +106,8 @@
     </label>
   </template>
 
+  <script src="ads-config.js"></script>
+  <script src="ads.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

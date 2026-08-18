@@ -127,11 +127,18 @@ function validNumbers(...xs){ return xs.every(Number.isFinite); }
 
 function categorySlug(value=""){ return String(value).toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
 function renderTabs(){ categoryTabs.innerHTML=categories.map(c=>`<button class="category-tab ${c===activeCategory?"active":""}" data-category="${c}" data-cat="${categorySlug(c)}" role="tab">${c}</button>`).join(""); $$(".category-tab",categoryTabs).forEach(tab=>tab.onclick=()=>{activeCategory=tab.dataset.category;renderTabs();renderTools();}); }
-function renderTools(){ const term=searchTerm.trim().toLowerCase(); const filtered=tools.filter(tool=>(activeCategory==="All"||tool.category===activeCategory)&&(!term||`${tool.name} ${tool.category} ${tool.description}`.toLowerCase().includes(term))); grid.innerHTML=filtered.map(tool=>`<article class="tool-card" tabindex="0" data-tool="${tool.id}" data-cat="${categorySlug(tool.category)}" aria-label="Open ${escapeHTML(tool.name)}"><div class="tool-top"><div class="tool-icon">${escapeHTML(tool.icon)}</div><span class="tool-arrow">↗</span></div><div><h3>${escapeHTML(tool.name)}</h3><p>${escapeHTML(tool.description)}</p><div class="tag">${escapeHTML(tool.category)}</div></div></article>`).join(""); emptyState.hidden=filtered.length>0; $$(".tool-card",grid).forEach(card=>{card.onclick=()=>openTool(card.dataset.tool);card.onkeydown=e=>{if(e.key==="Enter"||e.key===" ")openTool(card.dataset.tool);};}); }
-function renderQuickLinks(){ $("#quickLinks").innerHTML=tools.filter(t=>t.popular).slice(0,6).map(t=>`<button class="quick-chip" data-tool="${t.id}">${escapeHTML(t.name)}</button>`).join(""); $$(".quick-chip").forEach(c=>c.onclick=()=>openTool(c.dataset.tool)); }
+function toolSlug(tool){ return ({"percentage":"percentage-calculator","ratio":"ratio-calculator","average":"average-calculator","fraction":"fraction-to-decimal","proportion":"proportion-solver","grade":"grade-percentage","pace":"pace-calculator","fuel":"fuel-cost-calculator","bmi":"bmi-calculator","bmr":"bmr-estimate","emi":"emi-calculator","simple-interest":"simple-interest","compound-interest":"compound-interest","gst":"gst-vat-calculator","discount":"discount-calculator","margin":"profit-margin","markup":"markup-calculator","tip":"tip-calculator","savings":"savings-goal","roi":"roi-calculator","length":"length-converter","mass":"mass-converter","temperature":"temperature-converter","area":"area-converter","volume":"volume-converter","speed":"speed-converter","pressure":"pressure-converter","energy":"energy-converter","power":"power-converter","torque":"torque-converter","angle":"angle-converter","data-size":"data-size-converter","time-units":"time-unit-converter","frequency":"frequency-converter","flow":"flow-rate-converter","fuel-economy":"fuel-economy-converter","battery":"battery-runtime-calculator","battery-energy":"battery-energy-calculator","ohms-law":"ohms-law","electrical-power":"electrical-power-calculator","voltage-divider":"voltage-divider-calculator","series-resistance":"series-resistance-calculator","parallel-resistance":"parallel-resistance-calculator","electricity-cost":"electricity-cost-calculator","gear-ratio":"gear-ratio-calculator","wheel-speed":"wheel-speed-calculator","rpm-rads":"rpm-to-radians-per-second","density":"density-calculator","force":"force-calculator","work-energy":"work-calculator","heat-energy":"heat-energy-calculator","age":"age-calculator","date-diff":"date-difference-calculator","date-add":"add-subtract-days","weekday":"day-of-week","leap-year":"leap-year-checker","timestamp":"unix-timestamp-converter","countdown":"countdown-calculator","word-counter":"word-counter","case":"case-converter","slug":"slug-generator","find-replace":"find-and-replace","remove-duplicates":"remove-duplicate-lines","sort-lines":"sort-lines","trim-lines":"trim-and-clean-text","reverse-text":"reverse-text","text-repeat":"text-repeater","reading-time":"reading-time","json":"json-formatter","base64":"base64-encoder-decoder","url-codec":"url-encoder-decoder","html-entities":"html-escape-unescape","number-base":"number-base-converter","color-converter":"hex-to-rgb","sha256":"sha-256-hash-generator","uuid":"uuid-generator","jwt":"jwt-decoder","password":"password-generator","random":"random-number-generator","random-list":"random-list-picker","coin":"coin-flip","dice":"dice-roller","pin":"pin-generator","lorem":"lorem-ipsum-generator","random-color":"random-color-generator"})[tool.id] || tool.id; }
+function renderTools(){ const term=searchTerm.trim().toLowerCase(); const filtered=tools.filter(tool=>(activeCategory==="All"||tool.category===activeCategory)&&(!term||`${tool.name} ${tool.category} ${tool.description}`.toLowerCase().includes(term))); grid.innerHTML=filtered.map(tool=>`<a class="tool-card" href="tools/${toolSlug(tool)}/" data-tool="${tool.id}" data-cat="${categorySlug(tool.category)}" aria-label="Open ${escapeHTML(tool.name)}"><div class="tool-top"><div class="tool-icon">${escapeHTML(tool.icon)}</div><span class="tool-arrow">↗</span></div><div><h3>${escapeHTML(tool.name)}</h3><p>${escapeHTML(tool.description)}</p><div class="tag">${escapeHTML(tool.category)}</div></div></a>`).join(""); emptyState.hidden=filtered.length>0; }
+function renderQuickLinks(){ const root=$("#quickLinks"); if(!root)return; root.innerHTML=tools.filter(t=>t.popular).slice(0,6).map(t=>`<a class="quick-chip" href="tools/${toolSlug(t)}/">${escapeHTML(t.name)}</a>`).join(""); }
 function openTool(id){ const tool=tools.find(t=>t.id===id); if(!tool)return; modalTitle.textContent=tool.name;modalCategory.textContent=tool.category;$("#toolModal").dataset.cat=categorySlug(tool.category);modalBody.innerHTML="";renderToolUI(id,modalBody);modalBackdrop.hidden=false;document.body.style.overflow="hidden";setTimeout(()=>$("input, textarea, select",modalBody)?.focus(),50);history.replaceState(null,"",`#${id}`); }
 function closeModal(){modalBackdrop.hidden=true;document.body.style.overflow="";history.replaceState(null,"",location.pathname+location.search);}
-$("#closeModal").onclick=closeModal;modalBackdrop.onclick=e=>{if(e.target===modalBackdrop)closeModal();};document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modalBackdrop.hidden)closeModal();if(e.key==="/"&&modalBackdrop.hidden&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();search.focus();}});
+const closeModalButton=$("#closeModal");
+if(closeModalButton) closeModalButton.onclick=closeModal;
+if(modalBackdrop) modalBackdrop.onclick=e=>{if(e.target===modalBackdrop)closeModal();};
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&modalBackdrop&&!modalBackdrop.hidden)closeModal();
+  if(e.key==="/"&&search&&(!modalBackdrop||modalBackdrop.hidden)&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();search.focus();}
+});
 
 const converters = {
   length:{units:{m:["Meters",1],km:["Kilometers",1000],cm:["Centimeters",.01],mm:["Millimeters",.001],um:["Micrometers",1e-6],nm:["Nanometers",1e-9],mi:["Miles",1609.344],yd:["Yards",.9144],ft:["Feet",.3048],in:["Inches",.0254],nmi:["Nautical miles",1852]}},
@@ -239,8 +246,28 @@ function renderToolUI(id,root){
   handlers[id]?.();
 }
 
-search.addEventListener("input",()=>{searchTerm=search.value;renderTools();});
+window.QuickTools={tools,renderToolUI,toolSlug,categorySlug};
+
 const storedTheme=localStorage.getItem("quicktools-theme");if(storedTheme)document.documentElement.dataset.theme=storedTheme;
-$("#themeToggle").addEventListener("click",()=>{const next=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=next;localStorage.setItem("quicktools-theme",next);});
-$("#year").textContent=new Date().getFullYear();$("#toolCount").textContent=tools.length;if($("#sectionToolCount"))$("#sectionToolCount").textContent=tools.length;renderTabs();renderTools();renderQuickLinks();
-const initialTool=location.hash.replace("#","");if(tools.some(t=>t.id===initialTool))setTimeout(()=>openTool(initialTool),30);
+const themeToggle=$("#themeToggle");if(themeToggle)themeToggle.addEventListener("click",()=>{const next=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=next;localStorage.setItem("quicktools-theme",next);});
+const yearEl=$("#year");if(yearEl)yearEl.textContent=new Date().getFullYear();
+
+if(search&&grid&&categoryTabs&&emptyState){
+  search.addEventListener("input",()=>{searchTerm=search.value;renderTools();});
+  const toolCountEl=$("#toolCount");if(toolCountEl)toolCountEl.textContent=tools.length;
+  const sectionCount=$("#sectionToolCount");if(sectionCount)sectionCount.textContent=tools.length;
+  renderTabs();renderTools();renderQuickLinks();
+  const initialTool=location.hash.replace("#","");
+  const legacyTool=tools.find(t=>t.id===initialTool);
+  if(legacyTool) location.replace(`tools/${toolSlug(legacyTool)}/`);
+}
+
+const pageToolRoot=$("#toolPageApp");
+if(pageToolRoot){
+  const toolId=document.body.dataset.toolPage;
+  const tool=tools.find(t=>t.id===toolId);
+  if(tool){
+    pageToolRoot.closest(".tool-workspace")?.setAttribute("data-cat",categorySlug(tool.category));
+    renderToolUI(toolId,pageToolRoot);
+  }
+}

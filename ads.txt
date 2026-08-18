@@ -1,0 +1,3 @@
+# QuickTools ads.txt placeholder
+# Replace pub-XXXXXXXXXXXXXXXX with the exact publisher ID shown in your AdSense account before enabling ads.
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
